@@ -34,8 +34,7 @@ namespace BookRecomenderApi
 
             var repo = new RecomendationRepository(recContext);
             services.AddSingleton<IRecomendationRepository>(repo);
-            
-            services.AddSingleton<IMailerRepository>(new MailerRepository());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info

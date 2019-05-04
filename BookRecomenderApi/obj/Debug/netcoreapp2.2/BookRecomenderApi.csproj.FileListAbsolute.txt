@@ -1,5 +1,3 @@
-C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\Templates\email.tmpl
-C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\Templates\style.css
 C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.deps.json
 C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.runtimeconfig.json
 C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.runtimeconfig.dev.json

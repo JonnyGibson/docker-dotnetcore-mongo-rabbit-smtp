@@ -1,29 +1,32 @@
-namespace BookRecomenderApi.Repositories
+using System;
+using System.IO;
+using System.Text;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using Emailer.Models;
+
+
+namespace Emailer
 {
-    using System;
-    using System.IO;
-    using System.Text;
-    using MailKit.Net.Smtp;
-    using MailKit.Security;
-    using MimeKit;
-    using BookRecomenderApi.Models;
 
     public class MailerRepository : IMailerRepository
     {
 
-        // public const string MAIL_HOST = "localhost";
+       //  public const string MAIL_HOST = "localhost";
         public const string MAIL_HOST = "mail";
         public const int MAIL_PORT = 1025;
-        public async void SendMail(Email email, string templatePath)
+
+        public async void SendMail(Recomendation recomendation, string templatePath)
         {
             var message = new MimeKit.MimeMessage();
             message.From.Add(new MimeKit.MailboxAddress("Mr ToDo", "todo@engine.com"));
             message.To.Add(new MimeKit.MailboxAddress("testMailBox", "test@fake.com"));
-            message.Subject = "A new To Do - " + email.Content;
+            message.Subject = "A new To Do - " + recomendation.author;
 
             var bodyBuilder = new BodyBuilder();
             string templateContent;
-            using (StreamReader SourceReader = System.IO.File.OpenText(templatePath + "/email.tmpl"))
+            using (StreamReader SourceReader = System.IO.File.OpenText(templatePath + "\\email.tmpl"))
             {
                 templateContent = SourceReader.ReadToEnd();
             }
@@ -33,9 +36,9 @@ namespace BookRecomenderApi.Repositories
             myStringBuilder.Append("A new item has been added");
             myStringBuilder.Append("<dl>");
             myStringBuilder.Append("<dt>Title</dt>");
-            myStringBuilder.Append($"<dd>{email.Title}</dd>");
+            myStringBuilder.Append($"<dd>{recomendation.author}</dd>");
             myStringBuilder.Append("<dt>Content</dt>");
-            myStringBuilder.Append($"<dd>{email.Content}</dd>");
+            myStringBuilder.Append($"<dd>{recomendation.country}</dd>");
             myStringBuilder.Append("</dl>");
 
             bodyBuilder.HtmlBody = string.Format(templateContent,

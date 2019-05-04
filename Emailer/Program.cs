@@ -1,9 +1,11 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
+using System.IO;
 using System.Text;
 using Emailer.Models;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Emailer
 {
@@ -11,6 +13,10 @@ namespace Emailer
     {
         static void Main(string[] args)
         {
+            var repo = new MailerRepository();
+            var rootDir  = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+            var templatesPath = rootDir.Replace("file:\\","") + "\\Templates";
+
             var factory = new ConnectionFactory()
             {
                 HostName = "localhost",
@@ -32,7 +38,8 @@ namespace Emailer
                     var body = ea.Body;
                     var message = Encoding.UTF8.GetString(body);
                     //send email
-                 //   var book = JsonConvert.DeserializeObject<Recomendation>(message);
+                    var recomendation = JsonConvert.DeserializeObject<Recomendation>(message);
+                    repo.SendMail(recomendation, templatesPath);
                     Console.WriteLine(" [x] Received {0}", message);
                 };
 
@@ -42,6 +49,17 @@ namespace Emailer
 
                 Console.WriteLine(" Press [enter] to exit.");
                 Console.ReadLine();
+            }
+        }
+
+        private static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
             }
         }
     }

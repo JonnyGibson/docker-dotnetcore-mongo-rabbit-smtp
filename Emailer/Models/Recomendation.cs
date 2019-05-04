@@ -1,13 +1,10 @@
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace Emailer.Models
 {
     public class Recomendation
     {
-        [BsonId]
-        public ObjectId InternalId { get; set; }
+      
+        public string InternalId { get; set; }
         public string author { get; set; }
         public string country { get; set; }
         public string imageLink { get; set; }
