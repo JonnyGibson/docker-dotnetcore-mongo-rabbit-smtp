@@ -1,0 +1,16 @@
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\Templates\email.tmpl
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\Templates\style.css
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.deps.json
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.runtimeconfig.json
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.runtimeconfig.dev.json
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.dll
+C:\Projects\mongocore\BookRecomenderApi\bin\Debug\netcoreapp2.2\BookRecomenderApi.pdb
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.csprojAssemblyReference.cache
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.csproj.CoreCompileInputs.cache
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.RazorAssemblyInfo.cache
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.RazorAssemblyInfo.cs
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.AssemblyInfoInputs.cache
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.AssemblyInfo.cs
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.RazorTargetAssemblyInfo.cache
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.dll
+C:\Projects\mongocore\BookRecomenderApi\obj\Debug\netcoreapp2.2\BookRecomenderApi.pdb
