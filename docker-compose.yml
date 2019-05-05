@@ -23,8 +23,6 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
     depends_on:
       - mongo
-
-
   bookrecomenderapi-server:
     build: BookRecomenderApi\.
     restart: always
@@ -35,12 +33,13 @@ services:
     depends_on:
       - mongo
       - rabbitmq
-
   mail:
-      image: mailhog/mailhog
-      container_name: 'mailhog'
-      ports:
-        - "8025:8025"
+    container_name: mailhog
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
 
   rabbitmq:
       image: rabbitmq:3-management

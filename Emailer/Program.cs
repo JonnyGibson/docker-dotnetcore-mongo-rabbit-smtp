@@ -13,6 +13,7 @@ namespace Emailer
     {
         static void Main(string[] args)
         {
+            var runnerName = args[0] ?? "Default Runner";
             var repo = new MailerRepository();
             var rootDir  = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
             var templatesPath = rootDir.Replace("file:\\","") + "\\Templates";
@@ -39,15 +40,15 @@ namespace Emailer
                     var message = Encoding.UTF8.GetString(body);
                     //send email
                     var recomendation = JsonConvert.DeserializeObject<Recomendation>(message);
-                    repo.SendMail(recomendation, templatesPath);
-                    Console.WriteLine(" [x] Received {0}", message);
+                    repo.SendMail(recomendation, templatesPath,runnerName);
+                    Console.WriteLine(" [x] Received : {0}", message);
                 };
 
                 channel.BasicConsume(queue: "books",
                                      autoAck: true,
                                      consumer: consumer);
 
-                Console.WriteLine(" Press [enter] to exit.");
+                Console.WriteLine("Listning on the Rabbit MQ,  Press [enter] to exit.");
                 Console.ReadLine();
             }
         }

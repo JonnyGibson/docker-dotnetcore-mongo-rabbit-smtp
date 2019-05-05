@@ -8,6 +8,6 @@ namespace Emailer
 
     public interface IMailerRepository
     {
-        void SendMail(Recomendation recomendation, string templatePath);
+        void SendMail(Recomendation recomendation, string templatePath, string runnerName);
     }
 }
