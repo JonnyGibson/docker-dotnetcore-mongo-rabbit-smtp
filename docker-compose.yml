@@ -24,7 +24,7 @@ services:
     depends_on:
       - mongo
   bookrecomenderapi-server:
-    build: BookRecomenderApi\.
+    build: BookRecomenderApi
     restart: always
     ports:
       - 8888:80
