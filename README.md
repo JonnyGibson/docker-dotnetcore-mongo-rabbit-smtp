@@ -13,7 +13,14 @@ A sample project using Docker Compose to host a Dotnet Core WebApi, a RabbitMQ a
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-My setup is ,  an old Dell Windows 10 laptop, 4GB ram,  Docker Desktop running Linux containers
+My setup is ,  an old Dell Windows 10 Pro laptop, 4GB ram,  Docker Desktop running Linux containers
+
+There are known issues with RabbitMQ and Windows 10 Home
+
+From the commandline, the services can all be started and admin page shown in the browser by invokeing
+```
+sh up.sh
+```
 
 ### Building the services
 
