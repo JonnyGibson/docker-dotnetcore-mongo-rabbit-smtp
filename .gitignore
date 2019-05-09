@@ -33,3 +33,6 @@ msbuild.wrn
 
 BookRecomenderApi/obj
 BookRecomenderApi/bin
+
+Emailer/obj
+Emailer/bin
