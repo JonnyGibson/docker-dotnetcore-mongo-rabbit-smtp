@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-
 	"github.com/streadway/amqp"
 )
 
@@ -47,6 +46,7 @@ func main() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
+			sendEmail()
 		}
 	}()
 
