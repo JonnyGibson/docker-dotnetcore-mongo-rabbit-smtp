@@ -33,16 +33,24 @@ In the Emailer folder, there is a dotnet core console application which listens 
 
 Items are added to the queue by calling the api end point (can use swagger @  :8888/swagger), passing an integer param which is the number of recomendations to make.
 
-To test multiple queue listeners, open two consoles invoking with the command:
+To test multiple Dotnet queue listeners, open two consoles invoking with the command:
 
 First Console:
 ```
 dotnet run --no-build "First Listener"
 ```
-
 Second Console:
 ```
 dotnet run --no-build "First Listener"
+```
+
+For the Go Lang listener,  Go needs to be installed along with this message queue listener package
+```
+go get github.com/streadway/amqp
+```
+The listener is invoked by
+```
+go run receive.go
 ```
 
 When the emails are recieved, the listener name is appended to the subject text, for testing purposes.
