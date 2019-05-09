@@ -26,7 +26,8 @@ namespace Emailer
 
             var bodyBuilder = new BodyBuilder();
             string templateContent;
-            using (StreamReader SourceReader = System.IO.File.OpenText(templatePath + "\\email.tmpl"))
+            //TODO: investigate better way of cross platform file path resolving
+            using (StreamReader SourceReader = System.IO.File.OpenText($"{templatePath}{Path.DirectorySeparatorChar}email.tmpl"))
             {
                 templateContent = SourceReader.ReadToEnd();
             }

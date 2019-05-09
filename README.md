@@ -13,18 +13,19 @@ A sample project using Docker Compose to host a Dotnet Core WebApi, a RabbitMQ a
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-My setup is ,  an old Dell Windows 10 Pro laptop, 4GB ram,  Docker Desktop running Linux containers
+My setup is : an old Dell Windows 10 Pro laptop, 4GB ram,  Docker Desktop running Linux containers
 
 There are known issues with RabbitMQ and Windows 10 Home
 
-From the commandline, the services can all be started and admin page shown in the browser by invokeing
-```
-sh up.sh
-```
+I have run it on a fresh Macbook Pro and all the services run well, but there may be some issues with the dotnet core queue listeners - specifically, with parsing the path to the email template
 
 ### Building the services
 
-Simply runing docker-compose up --build in the root folder should get the main services up and running
+From the terminal, the services can all be started and admin pages exposed in the browser by invoking
+```
+sh up.sh
+```
+Or by simply runing docker-compose up --build in the root folder should get the main services up and running
 
 ### Queue Listeners
 

@@ -13592,23 +13592,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/adm/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\mongocore\\BookRecomenderApi\\BookRecomenderApi.csproj",
+      "projectUniqueName": "/Users/adm/projects/mongocore/BookRecomenderApi/BookRecomenderApi.csproj",
       "projectName": "BookRecomenderApi",
-      "projectPath": "C:\\Projects\\mongocore\\BookRecomenderApi\\BookRecomenderApi.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\mongocore\\BookRecomenderApi\\obj\\",
+      "projectPath": "/Users/adm/projects/mongocore/BookRecomenderApi/BookRecomenderApi.csproj",
+      "packagesPath": "/Users/adm/.nuget/packages/",
+      "outputPath": "/Users/adm/projects/mongocore/BookRecomenderApi/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/adm/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.2"

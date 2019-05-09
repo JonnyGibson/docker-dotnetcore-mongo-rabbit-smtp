@@ -6,6 +6,7 @@ using System.Text;
 using Emailer.Models;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.Linq;
 
 namespace Emailer
 {
@@ -13,10 +14,13 @@ namespace Emailer
     {
         static void Main(string[] args)
         {
-            var runnerName = args[0] ?? "Default Runner";
+            var runnerName = (args.Any())
+                ? args[0]
+                : "Unnamed Runner";
+
             var repo = new MailerRepository();
-            var rootDir  = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
-            var templatesPath = rootDir.Replace("file:\\","") + "\\Templates";
+            string filepath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string templatesPath = Path.Combine(filepath, "Templates");
 
             var factory = new ConnectionFactory()
             {
@@ -40,7 +44,7 @@ namespace Emailer
                     var message = Encoding.UTF8.GetString(body);
                     //send email
                     var recomendation = JsonConvert.DeserializeObject<Recomendation>(message);
-                    repo.SendMail(recomendation, templatesPath,runnerName);
+                    repo.SendMail(recomendation, templatesPath, runnerName);
                     Console.WriteLine(" [x] Received : {0}", message);
                 };
 
