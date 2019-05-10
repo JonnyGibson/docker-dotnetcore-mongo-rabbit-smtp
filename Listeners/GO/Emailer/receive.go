@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+
 	"github.com/streadway/amqp"
 )
 
@@ -12,6 +14,11 @@ func failOnError(err error, msg string) {
 }
 
 func main() {
+	runnerName := "Default Runner"
+	if len(os.Args) > 1 {
+		runnerName = os.Args[1]
+	}
+
 	conn, err := amqp.Dial("amqp://store:password@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -46,7 +53,7 @@ func main() {
 	go func() {
 		for d := range msgs {
 			log.Printf("Received a message: %s", d.Body)
-			sendEmail()
+			sendEmail(runnerName)
 		}
 	}()
 
