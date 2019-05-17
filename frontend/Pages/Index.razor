@@ -1,0 +1,65 @@
+﻿@page "/"
+@inject RecipientService _recipientService
+@inject IJSRuntime JsRuntime;
+
+
+<h2>Send some recommended reading</h2>
+
+@if (showInput) {
+<div class="input-group mb-3 w-50">
+    <input id="new-recipient" type="text" class="form-control" type="text" bind=@NewEmailValue 
+    placeholder="Recipient's Email" aria-label="Recipient's Email" aria-describedby="basic-addon2"/>
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" onclick=@(() => AddNew(NewEmailValue))>Add</button>
+        <button class="btn btn-outline-secondary" type="button" onclick="@ToggleAddNew">Cancel</button>
+    </div>
+</div>
+} 
+else 
+{
+    <button class="btn btn-success mt-1" id="btn-add-new" onclick="@ToggleAddNew"><i class="oi oi-plus"></i> Add Recipient</button>
+} 
+@if (recipients.Any()){
+<ul class="list-group w-50 mt-3">
+
+    @foreach (var recipient in recipients) {
+    <li class="list-group-item">@recipient.Email</li>
+    }
+</ul>
+}
+
+
+@functions {
+
+    Recipient[] recipients;
+    string NewEmailValue;
+    bool showInput = false;
+
+    private async Task RefreshList(){
+        recipients = await _recipientService.GetRecipientsAsync();
+    }
+    protected override async Task OnInitAsync()
+    {
+        await RefreshList();
+    }
+
+    void ToggleAddNew(UIMouseEventArgs e)
+    {
+       showInput = !showInput;
+       
+       if (showInput){
+        Focus("new-recipient");
+       }
+    }
+
+    private async Task  AddNew(string email){    
+        _recipientService.AddRecipient(email);
+        await RefreshList();
+        ToggleAddNew(null);
+    }
+
+   void Focus(string controlId)
+    {
+        var obj = JsRuntime.InvokeAsync<string>("MySetFocus", controlId);
+    }
+}

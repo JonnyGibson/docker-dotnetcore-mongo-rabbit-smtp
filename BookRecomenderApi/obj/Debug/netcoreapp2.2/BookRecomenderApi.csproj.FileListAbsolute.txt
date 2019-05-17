@@ -12,3 +12,6 @@
 /Users/adm/projects/mongocore/BookRecomenderApi/obj/Debug/netcoreapp2.2/BookRecomenderApi.RazorTargetAssemblyInfo.cache
 /Users/adm/projects/mongocore/BookRecomenderApi/obj/Debug/netcoreapp2.2/BookRecomenderApi.dll
 /Users/adm/projects/mongocore/BookRecomenderApi/obj/Debug/netcoreapp2.2/BookRecomenderApi.pdb
+/Users/adm/projects/mongocore/BookRecomenderApi/bin/Debug/netcoreapp2.2/appsettings.Development.json
+/Users/adm/projects/mongocore/BookRecomenderApi/bin/Debug/netcoreapp2.2/appsettings.json
+/Users/adm/projects/mongocore/BookRecomenderApi/bin/Debug/netcoreapp2.2/Properties/launchSettings.json
