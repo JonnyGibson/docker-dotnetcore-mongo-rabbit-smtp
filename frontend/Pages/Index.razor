@@ -34,6 +34,7 @@ else
     <li class="list-group-item">@recipient.Email</li>
     }
 </ul>
+<button class="btn btn-danger mt-1" onclick="@Clear"><i class="oi oi-trash"></i> Clear</button>
 }
 
 @functions {
@@ -75,6 +76,11 @@ else
         await RefreshList();
         ToggleAddNew(null);    
         newRecipient = new Recipient();
+    }
+     private async Task Clear(){    
+         _recipientService.Clear();       
+        await RefreshList();
+ 
     }
 
    void Focus(string controlId)

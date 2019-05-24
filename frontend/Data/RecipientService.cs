@@ -8,8 +8,7 @@ namespace frontend.Data
     {
         private static List<Recipient> Recipients = new List<Recipient>
         {
-            new Recipient("test@test.com"),
-            new Recipient("more@more.com")
+           
         };
         public async Task<Recipient[]> GetRecipientsAsync()
         {
