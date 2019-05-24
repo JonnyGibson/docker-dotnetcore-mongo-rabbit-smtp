@@ -39,9 +39,9 @@ namespace BookRecomenderApi
             {
                 c.SwaggerDoc("v1", new Info
                 {
-                    Title = "Todo API",
+                    Title = "Recomendation API",
                     Version = "v1",
-                    Description = "Todo API tutorial using MongoDB",
+                    Description = "This is a sample Recomendations enging",
                 });
             });
 

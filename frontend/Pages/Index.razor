@@ -6,14 +6,22 @@
 <h2>Send some recommended reading</h2>
 
 @if (showInput) {
+   
+    <EditForm Model="@newRecipient" OnValidSubmit="@AddNew">
+
 <div class="input-group mb-3 w-50">
-    <input id="new-recipient" type="text" class="form-control" type="text" bind=@NewEmailValue 
-    placeholder="Recipient's Email" aria-label="Recipient's Email" aria-describedby="basic-addon2"/>
+    <input id="new-recipient" type="text" class="form-control" 
+    bind-value-oninput=@newRecipient.Email placeholder="Recipient's Email" aria-label="Recipient's Email" aria-describedby="basic-addon2"/> 
     <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" onclick=@(() => AddNew(NewEmailValue))>Add</button>
+        <button class="btn btn-outline-secondary" type="submit">Add</button>
         <button class="btn btn-outline-secondary" type="button" onclick="@ToggleAddNew">Cancel</button>
-    </div>
+    </div>   
+    
 </div>
+<ValidationMessage For="@(() => newRecipient.Email)" />
+<DataAnnotationsValidator />
+    
+</EditForm>
 } 
 else 
 {
@@ -28,34 +36,45 @@ else
 </ul>
 }
 
-
 @functions {
+    private Recipient newRecipient = new Recipient();
 
     Recipient[] recipients;
-    string NewEmailValue;
+    
     bool showInput = false;
+
+
+
 
     private async Task RefreshList(){
         recipients = await _recipientService.GetRecipientsAsync();
     }
+
+    protected override void OnAfterRender()
+    {
+        if (showInput){
+             Focus("new-recipient");     
+        }
+        else {
+            Focus("btn-add-new"); 
+        };
+    }
+
     protected override async Task OnInitAsync()
     {
         await RefreshList();
     }
 
-    void ToggleAddNew(UIMouseEventArgs e)
+    private void ToggleAddNew(UIMouseEventArgs e)
     {
        showInput = !showInput;
-       
-       if (showInput){
-        Focus("new-recipient");
-       }
     }
 
-    private async Task  AddNew(string email){    
-        _recipientService.AddRecipient(email);
+    private async Task AddNew(){    
+         _recipientService.AddRecipient(newRecipient.Email);       
         await RefreshList();
-        ToggleAddNew(null);
+        ToggleAddNew(null);    
+        newRecipient = new Recipient();
     }
 
    void Focus(string controlId)
