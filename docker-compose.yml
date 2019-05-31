@@ -54,3 +54,10 @@ services:
       environment:
         - RABBITMQ_DEFAULT_USER=store
         - RABBITMQ_DEFAULT_PASS=password
+  frontend:
+    build: frontend
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - bookrecomenderapi-server

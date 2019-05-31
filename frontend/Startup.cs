@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using frontend.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using frontend.Data;
+
 
 namespace frontend
 {
@@ -20,7 +21,6 @@ namespace frontend
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-           
              services.AddSingleton<RecipientService>();
         }
 
@@ -37,7 +37,7 @@ namespace frontend
                 app.UseHsts();
             }
 
-          //  app.UseHttpsRedirection();
+         //   app.UseHttpsRedirection();
 
             app.UseStaticFiles();
 
