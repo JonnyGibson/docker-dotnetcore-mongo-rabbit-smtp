@@ -7,32 +7,43 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: myDB
+      MONGO_INITDB_DATABASE: BookRecommender
     ports:
       - 27017:27017
     volumes:
       - ./mongo-seed/testdata.js:/docker-entrypoint-initdb.d/testdata.js
 
   mongo-express:
-    image: "mongo-express"
+    image: "mongo-express:latest"
     restart: always
     ports:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - mongo
+
   bookrecomenderapi-server:
     build: BookRecomenderApi
     restart: always
     ports:
       - 8888:80
     environment:
-      MongoDB__Host: mongo
+      MongoDB__ConnectionString: "mongodb://root:example@mongo:27017"
+      MongoDB__Database: "BookRecommender"
+      RabbitMQ__HostName: "JGMQ"
+      RabbitMQ__UserName: "store"
+      RabbitMQ__Password: "password"
+      ASPNETCORE_URLS: "http://+:80"
     depends_on:
-      - mongo
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+
   mail:
     container_name: mailhog
     image: mailhog/mailhog
@@ -42,22 +53,69 @@ services:
       - 8025:8025
 
   rabbitmq:
-      image: rabbitmq:3-management
-      container_name: JGMQ
-      hostname: JGMQ
-      ports:
-        - 15672:15672
-        - 5671:5671
-        - 5672:5672
-      volumes:
-        - ~/rabbitmq:/var/lib/rabbitmq/mnesia 
-      environment:
-        - RABBITMQ_DEFAULT_USER=store
-        - RABBITMQ_DEFAULT_PASS=password
+    image: rabbitmq:3-management
+    container_name: JGMQ
+    hostname: JGMQ
+    ports:
+      - 15672:15672
+      - 5671:5671
+      - 5672:5672
+    volumes:
+      - ~/rabbitmq:/var/lib/rabbitmq/mnesia 
+    environment:
+      - RABBITMQ_DEFAULT_USER=store
+      - RABBITMQ_DEFAULT_PASS=password
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   frontend:
     build: frontend
     restart: always
     ports:
-      - 8080:80
+      - 8080:8080
+    volumes:
+      - frontend-keys:/root/.aspnet/DataProtection-Keys
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - bookrecomenderapi-server
+
+  dotnet-emailer:
+    build: 
+      context: ./Listeners/Dotnet/Emailer
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - RABBITMQ_HOST=JGMQ
+      - RABBITMQ_USER=store
+      - RABBITMQ_PASSWORD=password
+      - MAIL_HOST=mail
+      - MAIL_PORT=1025
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mail:
+        condition: service_started
+
+  go-emailer:
+    build: 
+      context: ./Listeners/GO/Emailer
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - RABBITMQ_HOST=JGMQ
+      - RABBITMQ_USER=store
+      - RABBITMQ_PASSWORD=password
+      - MAIL_HOST=mail
+      - MAIL_PORT=1025
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mail:
+        condition: service_started
+
+volumes:
+  frontend-keys:

@@ -1,4 +1,3 @@
-
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -7,14 +6,31 @@ namespace BookRecomenderApi.Models
     public class Recomendation
     {
         [BsonId]
-        public ObjectId InternalId { get; set; }
-        public string author { get; set; }
-        public string country { get; set; }
-        public string imageLink { get; set; }
-        public string language { get; set; }
-        public string link { get; set; }
-        public int pages { get; set; }
-        public string title { get; set; }
-        public int year { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
+
+        [BsonElement("author")]
+        public required string Author { get; set; }
+
+        [BsonElement("country")]
+        public required string Country { get; set; }
+
+        [BsonElement("imageLink")]
+        public required string ImageLink { get; set; }
+
+        [BsonElement("language")]
+        public required string Language { get; set; }
+
+        [BsonElement("link")]
+        public required string Link { get; set; }
+
+        [BsonElement("pages")]
+        public int Pages { get; set; }
+
+        [BsonElement("title")]
+        public required string Title { get; set; }
+
+        [BsonElement("year")]
+        public int Year { get; set; }
     }
 }

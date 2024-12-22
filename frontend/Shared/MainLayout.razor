@@ -1,15 +1,26 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 bg-dark text-white p-3">
+            <NavMenu />
+        </div>
+        <div class="col-md-9 col-lg-10 p-3">
+            <nav class="navbar navbar-light bg-light mb-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand">Book Recommendations</span>
+                    <a href="https://docs.microsoft.com/aspnet/" target="_blank" class="btn btn-outline-primary">About</a>
+                </div>
+            </nav>
+            <main>
+                @Body
+            </main>
+        </div>
+    </div>
 </div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank" class="ml-md-auto">About</a>
-    </div>
-
-    <div class="content px-4">
-        @Body
-    </div>
+<div id="blazor-error-ui" class="alert alert-warning" style="display: none;">
+    An error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss float-end">🗙</a>
 </div>

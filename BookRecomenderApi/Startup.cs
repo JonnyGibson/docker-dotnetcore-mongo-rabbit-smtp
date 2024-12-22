@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using BookRecomenderApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using BookRecomenderApi.Repositories;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace BookRecomenderApi
 {
@@ -30,46 +32,60 @@ namespace BookRecomenderApi
         {
             var config = new ServerConfig();
             Configuration.Bind(config);
-            var recContext = new RecomendationContext(config.MongoDB);
-
-            var repo = new RecomendationRepository(recContext);
-            services.AddSingleton<IRecomendationRepository>(repo);
+            
+            Console.WriteLine("Configuring services...");
+            
+            services.AddSingleton(config.MongoDB);
+            Console.WriteLine("Added MongoDB config");
+            
+            services.AddSingleton<IRecomendationContext, RecomendationContext>();
+            Console.WriteLine("Added RecomendationContext");
+            
+            services.AddSingleton<IRecomendationRepository, RecomendationRepository>();
+            Console.WriteLine("Added RecomendationRepository");
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Recomendation API",
+                    Title = "Book Recomendation API",
                     Version = "v1",
-                    Description = "This is a sample Recomendations enging",
+                    Description = "API for book recommendations"
                 });
             });
+            Console.WriteLine("Added Swagger");
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
+            Console.WriteLine("Added Controllers");
+            
+            // Print all registered services for debugging
+            foreach (var service in services)
+            {
+                Console.WriteLine($"Service: {service.ServiceType.FullName} - Lifetime: {service.Lifetime} - Implementation: {service.ImplementationType?.FullName}");
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "JG API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Book Recomendation API V1");
+                c.RoutePrefix = string.Empty;
             });
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

@@ -7,64 +7,103 @@ using Emailer.Models;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Linq;
+using System.Threading;
 
 namespace Emailer
 {
     class Program
     {
+        private static ManualResetEvent _resetEvent = new ManualResetEvent(false);
+
         static void Main(string[] args)
         {
             var runnerName = (args.Any())
                 ? args[0]
                 : "Unnamed Runner";
 
+            Console.WriteLine($"Starting email listener with name: {runnerName}");
+
             var repo = new MailerRepository();
-            string filepath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string filepath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string templatesPath = Path.Combine(filepath, "Templates");
+            
+            Console.WriteLine($"Templates path: {templatesPath}");
 
             var factory = new ConnectionFactory()
             {
-                HostName = "localhost",
-                UserName = "store",
-                Password = "password"
+                HostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "JGMQ",
+                UserName = Environment.GetEnvironmentVariable("RABBITMQ_USER") ?? "store",
+                Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "password"
             };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "books",
-                                     durable: false,
-                                     exclusive: false,
-                                     autoDelete: false,
-                                     arguments: null);
 
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
+            Console.WriteLine($"Connecting to RabbitMQ at {factory.HostName} with user {factory.UserName}");
+
+            try
+            {
+                using (var connection = factory.CreateConnection())
                 {
-                    var body = ea.Body;
-                    var message = Encoding.UTF8.GetString(body);
-                    //send email
-                    var recomendation = JsonConvert.DeserializeObject<Recomendation>(message);
-                    repo.SendMail(recomendation, templatesPath, runnerName);
-                    Console.WriteLine(" [x] Received : {0}", message);
-                };
+                    Console.WriteLine("Successfully connected to RabbitMQ");
+                    using (var channel = connection.CreateModel())
+                    {
+                        var queueDeclare = channel.QueueDeclare(queue: "books",
+                                             durable: false,
+                                             exclusive: false,
+                                             autoDelete: false,
+                                             arguments: null);
 
-                channel.BasicConsume(queue: "books",
-                                     autoAck: true,
-                                     consumer: consumer);
+                        Console.WriteLine($"Queue 'books' declared, current message count: {queueDeclare.MessageCount}");
 
-                Console.WriteLine("Listning on the Rabbit MQ,  Press [enter] to exit.");
-                Console.ReadLine();
+                        var consumer = new EventingBasicConsumer(channel);
+                        consumer.Received += (model, ea) =>
+                        {
+                            try
+                            {
+                                var messageBody = Encoding.UTF8.GetString(ea.Body.Span);
+                                Console.WriteLine($"Received raw message: {messageBody}");
+                                
+                                var message = JsonConvert.DeserializeObject<RecommendationMessage>(messageBody);
+                                Console.WriteLine($" [x] Processing recommendation '{message.Recommendation.Title}' for {message.RecipientEmail}");
+                                
+                                repo.SendMail(message, templatesPath, runnerName);
+                                Console.WriteLine($" [✓] Sent email for '{message.Recommendation.Title}' to {message.RecipientEmail}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($" [!] Error processing message: {ex.Message}");
+                                if (ex.InnerException != null)
+                                {
+                                    Console.WriteLine($" [!] Inner error: {ex.InnerException.Message}");
+                                }
+                            }
+                        };
+
+                        channel.BasicConsume(queue: "books",
+                                             autoAck: true,
+                                             consumer: consumer);
+
+                        Console.WriteLine(" [*] Listening for book recommendations. Use CTRL+C to exit.");
+
+                        // Handle shutdown gracefully
+                        Console.CancelKeyPress += (sender, eventArgs) =>
+                        {
+                            Console.WriteLine("Shutting down...");
+                            _resetEvent.Set();
+                            eventArgs.Cancel = true;
+                        };
+
+                        // Wait indefinitely
+                        _resetEvent.WaitOne();
+                    }
+                }
             }
-        }
-
-        private static string AssemblyDirectory
-        {
-            get
+            catch (Exception ex)
             {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                Console.WriteLine($"Critical error: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner error: {ex.InnerException.Message}");
+                }
+                throw;
             }
         }
     }

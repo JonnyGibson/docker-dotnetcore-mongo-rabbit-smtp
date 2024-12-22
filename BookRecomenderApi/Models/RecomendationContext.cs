@@ -1,16 +1,17 @@
+using MongoDB.Driver;
+
 namespace BookRecomenderApi.Models
 {
-    using BookRecomenderApi;
-    using MongoDB.Driver;
-    using System;
-    public class RecomendationContext: IRecomendationContext
+    public class RecomendationContext : IRecomendationContext
     {
-        private readonly IMongoDatabase _db;
-        public RecomendationContext(MongoDBConfig config)
+        private readonly IMongoDatabase _database;
+
+        public RecomendationContext(MongoDbConfig config)
         {
             var client = new MongoClient(config.ConnectionString);
-            _db = client.GetDatabase(config.Database);
+            _database = client.GetDatabase(config.Database);
         }
-        public IMongoCollection<Recomendation> Recomendations => _db.GetCollection<Recomendation>("books");
+
+        public IMongoCollection<Recomendation> Recomendations => _database.GetCollection<Recomendation>("Recomendations");
     }
 }

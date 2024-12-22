@@ -1002,5 +1002,8 @@ var json = `
     }
   ]`;
 
-  obj = JSON.parse(json);
-  db.books.insert(obj);
+var data = JSON.parse(json);
+
+db = db.getSiblingDB('BookRecommender');
+db.createCollection('Recomendations');
+db.Recomendations.insertMany(data);
